@@ -65,7 +65,7 @@ func PngToJpegConverterService(dto dtos.PngToJpegInputDTO) (dtos.PngToJpegOutput
 	}()
 
 	return dtos.PngToJpegOutputDTO{
-		FileName: "compressed_images.zip",
+		FileName: "converted_images.zip",
 		FilePath: zipFile.Name(),
 	}, nil
 }
@@ -85,7 +85,7 @@ func pngToJpegConverter(image *multipart.FileHeader) (*os.File, error) {
 	}
 
 	// io.Writer
-	file, err := os.CreateTemp("tmp/files/", image.Filename+"_*.jpg")
+	file, err := os.CreateTemp("converted_images", image.Filename+"_*.jpg")
 	if err != nil {
 		log.Printf("Error creating file: %s", err)
 		return nil, err
@@ -105,8 +105,8 @@ func pngToJpegConverter(image *multipart.FileHeader) (*os.File, error) {
 }
 
 func zipFiles(files []*os.File) (*os.File, error) {
-	tempFileName := "compressed_images" + time.DateOnly
-	f, err := os.CreateTemp("tmp/files/", tempFileName)
+	tempFileName := "converted_images" + time.DateOnly
+	f, err := os.CreateTemp("converted_images", tempFileName)
 	if err != nil {
 		log.Printf("Error creating file: %s", err)
 	}
