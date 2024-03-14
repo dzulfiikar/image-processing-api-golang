@@ -13,6 +13,7 @@ import (
 	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"gocv.io/x/gocv"
 )
 
 type ENV struct {
@@ -84,6 +85,10 @@ func shutdownWebServer(srv *http.Server) {
 }
 
 func main() {
+	fmt.Printf("gocv version: %s\n", gocv.Version())
+	fmt.Printf("opencv lib version: %s\n", gocv.OpenCVVersion())
+
 	env := loadEnv()
 	initializeWebServer(env.AppPort)
+
 }
