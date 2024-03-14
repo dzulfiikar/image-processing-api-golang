@@ -8,4 +8,5 @@ import (
 func SetupRoutes(router *gin.RouterGroup) {
 	router.POST("/png-to-jpeg", controllers.PngToJpegConverter)
 	router.POST("/resize-image", controllers.ResizeImage)
+	router.POST("/compress-image", controllers.CompressImage)
 }

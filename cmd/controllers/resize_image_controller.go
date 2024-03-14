@@ -1,14 +1,13 @@
 package controllers
 
 import (
-	"fmt"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/dtos"
 	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/services"
+	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/validations"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +20,10 @@ func ResizeImage(c *gin.Context) {
 		return
 	}
 
-	images := validateImages(form, c)
+	images, err := validations.ValidateImages(form, c)
+	if err != nil {
+		return
+	}
 	imagesWidth, imagesHeight := validateDimensions(c)
 
 	var resizeImageInputDto dtos.ResizeImageInputDTO
@@ -46,29 +48,6 @@ func ResizeImage(c *gin.Context) {
 	defer os.Remove(result.FilePath)
 
 	c.FileAttachment(result.FilePath, result.FileName)
-}
-
-func validateImages(form *multipart.Form, c *gin.Context) []*multipart.FileHeader {
-	images := form.File["images"]
-	if images == nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "image(s) are required",
-		})
-		return nil
-	}
-
-	for i, image := range images {
-		if image.Header.Get("Content-Type") != "image/png" && image.Header.Get("Content-Type") != "image/jpeg" {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "image type must be image/png or image/jpeg",
-			})
-			return nil
-		}
-
-		images[i].Filename = "image_" + fmt.Sprintf("%d", i)
-	}
-
-	return images
 }
 
 func validateDimensions(c *gin.Context) (width []int, height []int) {

@@ -99,7 +99,7 @@ func resizeImage(sourceImg *dtos.ResizeImage) (*os.File, error) {
 
 	resizedImg := gocv.IMWrite(jpegImg.Name(), img)
 	if !resizedImg {
-		fmt.Println("Error writing image")
+		log.Println("Error writing image")
 		return nil, err
 	}
 

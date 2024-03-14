@@ -15,9 +15,7 @@ func ZipFiles(files []*os.File, targetDir string) (*os.File, error) {
 		return nil, err
 	}
 
-	defer func() {
-		f.Close()
-	}()
+	defer f.Close()
 
 	writer := zip.NewWriter(f)
 	defer writer.Close()
