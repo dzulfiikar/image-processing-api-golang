@@ -15,15 +15,19 @@ func PngToJpegConverter(sourceName string, sourceImg *multipart.File, destDir st
 		return nil, err
 	}
 
+	err = os.MkdirAll(destDir, 0755)
+	if err != nil {
+		log.Printf("Error creating directory: %s", err)
+		return nil, err
+	}
+
 	tempFile, err := os.CreateTemp(destDir, sourceName+"_*.jpg")
 	if err != nil {
 		log.Printf("Error creating file: %s", err)
 		return nil, err
 	}
 
-	defer func() {
-		tempFile.Close()
-	}()
+	defer tempFile.Close()
 
 	err = jpeg.Encode(tempFile, pngImg, &jpeg.Options{Quality: 100})
 	if err != nil {
