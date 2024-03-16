@@ -4,6 +4,11 @@ import (
 	"mime/multipart"
 )
 
+type ImageDimension struct {
+	Width  int `json:"width"`
+	Height int `json:"height"`
+}
+
 type ResizeImage struct {
 	Width  int
 	Height int

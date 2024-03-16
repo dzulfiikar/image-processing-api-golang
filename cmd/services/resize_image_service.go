@@ -3,8 +3,11 @@ package services
 import (
 	"fmt"
 	"image"
+	"image/jpeg"
+	"image/png"
 	"log"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/dtos"
@@ -69,39 +72,47 @@ func ResizeImageService(dto dtos.ResizeImageInputDTO) (dtos.ResizeImageOutputDTO
 
 func resizeImage(sourceImg *dtos.ResizeImage) (*os.File, error) {
 
-	imgReader, err := sourceImg.Image.Open()
+	imgFile, err := sourceImg.Image.Open()
 	if err != nil {
 		fmt.Printf("Error opening image: %s", err)
 		return nil, err
 	}
 
-	jpegImg, err := utils.PngToJpegConverter(sourceImg.Image.Filename, &imgReader, "compressed_resized_images")
+	decodedImage, _, err := image.Decode(imgFile)
 	if err != nil {
-		fmt.Printf("Error converting image: %s", err)
+		log.Println("Error when decoding image")
 		return nil, err
 	}
 
-	img := gocv.NewMat()
-	defer img.Close()
-
-	img = gocv.IMRead(jpegImg.Name(), gocv.IMReadAnyColor)
-	if img.Empty() {
-		fmt.Printf("Error reading image: %s\n", jpegImg.Name())
+	sourceType := strings.Split(sourceImg.Image.Header.Get("Content-Type"), "/")[1]
+	tempFile, err := os.CreateTemp("compressed_resized_images", sourceImg.Image.Filename+"_*."+sourceType)
+	if err != nil {
+		log.Println("Error when creating temp file", err)
 		return nil, err
 	}
 
-	gocv.Resize(img, &img, image.Point{sourceImg.Width, sourceImg.Height}, float64(0), float64(0), gocv.IMWriteJpegQuality)
+	switch sourceType {
+	case "png":
+		png.Encode(tempFile, decodedImage)
+	case "jpeg":
+		jpeg.Encode(tempFile, decodedImage, &jpeg.Options{Quality: 100})
+	}
 
-	// defer func() {
-	// 	jpegImg.Close()
-	// 	os.Remove(jpegImg.Name())
-	// }()
+	matImg := gocv.NewMat()
+	defer matImg.Close()
 
-	resizedImg := gocv.IMWrite(jpegImg.Name(), img)
-	if !resizedImg {
-		log.Println("Error writing image")
+	matImg = gocv.IMRead(tempFile.Name(), gocv.IMReadAnyColor)
+	if matImg.Empty() {
+		fmt.Printf("Error reading image: %s\n", tempFile.Name())
 		return nil, err
 	}
 
-	return jpegImg, nil
+	gocv.Resize(matImg, &matImg, image.Point{
+		sourceImg.Width,
+		sourceImg.Height,
+	}, float64(0), float64(0), gocv.InterpolationDefault)
+
+	gocv.IMWrite(tempFile.Name(), matImg)
+
+	return tempFile, nil
 }

@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"encoding/json"
+	"errors"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/dtos"
 	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/services"
@@ -22,17 +23,27 @@ func ResizeImage(c *gin.Context) {
 
 	images, err := validations.ValidateImages(form, c)
 	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
 		return
 	}
-	imagesWidth, imagesHeight := validateDimensions(c)
+
+	imageDimensions, err := validateDimensions(len(images), c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
 
 	var resizeImageInputDto dtos.ResizeImageInputDTO
 
 	for i, image := range images {
 		resizeImageInputDto.Images = append(resizeImageInputDto.Images, &dtos.ResizeImage{
 			Image:  image,
-			Width:  int(imagesWidth[i]),
-			Height: int(imagesHeight[i]),
+			Width:  imageDimensions[i].Width,
+			Height: imageDimensions[i].Height,
 		})
 	}
 
@@ -50,46 +61,27 @@ func ResizeImage(c *gin.Context) {
 	c.FileAttachment(result.FilePath, result.FileName)
 }
 
-func validateDimensions(c *gin.Context) (width []int, height []int) {
-	imagesWidth := c.PostFormArray("images_width")
-	imagesHeight := c.PostFormArray("images_height")
-	if len(imagesWidth) != len(imagesHeight) {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "images_width and images_height must have the same length",
-		})
-		return nil, nil
+func validateDimensions(imageCount int, c *gin.Context) ([]dtos.ImageDimension, error) {
+	imageDimensions, success := c.GetPostFormArray("image_dimensions")
+	if !success {
+		return nil, errors.New("image_dimensions is required")
 	}
 
-	parsedWidths := make([]int, len(imagesWidth))
-	parsedHeights := make([]int, len(imagesHeight))
-
-	for i, width := range imagesWidth {
-		parsedWidth, err := strconv.ParseInt(width, 10, 64)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "images_width must be integer",
-			})
-			return nil, nil
-		}
-
-		parsedWidths[i] = int(parsedWidth)
-		parsedHeight, err := strconv.ParseInt(imagesHeight[i], 10, 64)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "images_height must be integer",
-			})
-			return nil, nil
-		}
-
-		parsedHeights[i] = int(parsedHeight)
-
-		if parsedWidth <= 0 || parsedHeight <= 0 {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "images_width and images_height must be greater than 0",
-			})
-			return nil, nil
-		}
+	if imageCount != len(imageDimensions) {
+		return nil, errors.New("mismatch image request")
 	}
 
-	return parsedWidths, parsedHeights
+	parsedDimensions := make([]dtos.ImageDimension, 0)
+
+	for _, imageDimension := range imageDimensions {
+		var parsedDimension dtos.ImageDimension
+		err := json.Unmarshal([]byte(imageDimension), &parsedDimension)
+		if err != nil {
+			return nil, errors.New("invalid image_dimensions request")
+		}
+
+		parsedDimensions = append(parsedDimensions, parsedDimension)
+	}
+
+	return parsedDimensions, nil
 }

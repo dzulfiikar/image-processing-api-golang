@@ -22,7 +22,7 @@ func PngToJpegConverter(c *gin.Context) {
 	if err != nil {
 		log.Println("Error parsing form : ", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Invalid request",
+			"message": "Bad Request",
 		})
 		return
 	}
