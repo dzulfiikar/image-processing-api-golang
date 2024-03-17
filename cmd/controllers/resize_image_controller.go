@@ -68,7 +68,7 @@ func validateDimensions(imageCount int, c *gin.Context) ([]dtos.ImageDimension, 
 	}
 
 	if imageCount != len(imageDimensions) {
-		return nil, errors.New("mismatch image request")
+		return nil, errors.New("mismatch images with image_dimensions request")
 	}
 
 	parsedDimensions := make([]dtos.ImageDimension, 0)

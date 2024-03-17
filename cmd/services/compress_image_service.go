@@ -77,6 +77,12 @@ func CompressImageService(dto dtos.CompressImageInputDTO) (dtos.CompressImageOut
 }
 
 func compressImage(sourceImg *multipart.FileHeader, targetQuality int, targetDir string) (*os.File, error) {
+	err := os.MkdirAll(targetDir, 0775)
+	if err != nil {
+		log.Println("Error when creating directory")
+		return nil, err
+	}
+
 	file, err := sourceImg.Open()
 	if err != nil {
 		log.Println("Error when opening file")

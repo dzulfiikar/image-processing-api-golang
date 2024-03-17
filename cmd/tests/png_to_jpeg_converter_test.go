@@ -3,6 +3,7 @@ package tests
 import (
 	"bytes"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -31,7 +32,7 @@ func TestPngToJpegConverter(t *testing.T) {
 		for _, pngImage := range pngImages {
 			imageFile, err := os.Open(pngImage)
 			if err != nil {
-				panic("Error when reading file")
+				log.Panicln(err)
 			}
 
 			defer imageFile.Close()
@@ -40,18 +41,18 @@ func TestPngToJpegConverter(t *testing.T) {
 			part, err := writer.CreatePart(imageHeader)
 
 			if err != nil {
-				return
+				log.Panicln(err)
 			}
 			_, err = io.Copy(part, imageFile)
 			if err != nil {
-				return
+				log.Panicln(err)
 			}
 
 		}
 
 		err := writer.Close()
 		if err != nil {
-			return
+			log.Panicln(err)
 		}
 
 		req, _ := http.NewRequest("POST", "/png-to-jpeg", body)
@@ -83,16 +84,16 @@ func TestPngToJpegConverter(t *testing.T) {
 		part, err := writer.CreatePart(imageHeader)
 
 		if err != nil {
-			return
+			log.Panicln(err)
 		}
 		_, err = io.Copy(part, imageFile)
 		if err != nil {
-			return
+			log.Panicln(err)
 		}
 
 		err = writer.Close()
 		if err != nil {
-			return
+			log.Panicln(err)
 		}
 
 		req, _ := http.NewRequest("POST", "/png-to-jpeg", body)
