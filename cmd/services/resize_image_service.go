@@ -84,9 +84,9 @@ func resizeImage(sourceImg *dtos.ResizeImage) (*os.File, error) {
 		return nil, err
 	}
 
-	err = os.Mkdir("resized_images", 0777)
+	err = os.MkdirAll("resized_images", 0777)
 	if err != nil {
-		log.Println("Error when creating dir")
+		log.Println("Error when creating directory")
 		return nil, err
 	}
 
