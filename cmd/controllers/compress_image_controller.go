@@ -45,7 +45,7 @@ func CompressImage(c *gin.Context) {
 	}
 
 	var CompressImageInputDTO dtos.CompressImageInputDTO
-
+	
 	for i, image := range images {
 		CompressImageInputDTO.CompressImages = append(CompressImageInputDTO.CompressImages, &dtos.CompressImage{
 			Image:   image,
@@ -69,9 +69,13 @@ func CompressImage(c *gin.Context) {
 
 func validateQuality(images []*multipart.FileHeader, c *gin.Context) ([]int, error) {
 	qualities := c.PostFormArray("qualities")
+	
+	if len(qualities) == 0 {
+		return nil, errors.New("qualities is required")
+	}
 
 	if len(images) != len(qualities) {
-		return nil, errors.New("request mismatch")
+		return nil, errors.New("mismatch images with qualities")
 	}
 
 	parsedQualities := make([]int, 0)
@@ -81,13 +85,12 @@ func validateQuality(images []*multipart.FileHeader, c *gin.Context) ([]int, err
 		if err != nil {
 			return nil, errors.New("qualities must be integer")
 		}
-
 		if images[i].Header.Get("Content-Type") == "image/png" {
-			if parsedQuality > 9 && parsedQuality < 0 {
+			if parsedQuality > 9 || parsedQuality < 0 {
 				return nil, errors.New("qualities for png file(s) must be between 0 - 9")
 			}
 		} else {
-			if parsedQuality < 0 && parsedQuality > 100 {
+			if parsedQuality < 0 || parsedQuality > 100 {
 				return nil, errors.New("qualities for jpg file(s) must be between 0 - 100")
 			}
 		}

@@ -58,14 +58,14 @@ func ResizeImageService(dto dtos.ResizeImageInputDTO) (dtos.ResizeImageOutputDTO
 		}
 	}()
 
-	zipFile, err := utils.ZipFiles(files, "compressed_resized_images")
+	zipFile, err := utils.ZipFiles(files, "resized_images")
 	if err != nil {
 		log.Printf("Error creating zip file: %s", err)
 		return dtos.ResizeImageOutputDTO{}, err
 	}
 
 	return dtos.ResizeImageOutputDTO{
-		FileName: "compressed_resized_images.zip",
+		FileName: "resized_images.zip",
 		FilePath: zipFile.Name(),
 	}, nil
 }
@@ -84,8 +84,14 @@ func resizeImage(sourceImg *dtos.ResizeImage) (*os.File, error) {
 		return nil, err
 	}
 
+	err = os.Mkdir("resized_images", 0777)
+	if err != nil {
+		log.Println("Error when creating dir")
+		return nil, err
+	}
+
 	sourceType := strings.Split(sourceImg.Image.Header.Get("Content-Type"), "/")[1]
-	tempFile, err := os.CreateTemp("compressed_resized_images", sourceImg.Image.Filename+"_*."+sourceType)
+	tempFile, err := os.CreateTemp("resized_images", sourceImg.Image.Filename+"_*."+sourceType)
 	if err != nil {
 		log.Println("Error when creating temp file", err)
 		return nil, err
