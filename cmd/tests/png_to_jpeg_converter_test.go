@@ -60,12 +60,12 @@ func TestPngToJpegConverter(t *testing.T) {
 
 		assert.Equal(t, 200, recorder.Code)
 
-		parsedZip := utils.ParseResponseToZip(recorder.Body.Bytes(), "converted_images/file.zip")
+		parsedZip := utils.ParseResponseToZip(recorder.Body.Bytes(), "converted_images","file.zip")
 
 		assert.Equal(t, len(pngImages), len(parsedZip.File))
 	})
 
-	t.Run("Given non png images, When convert png to jpeg, Should return 400 ", func(t *testing.T) {
+	t.Run("Given non png images, When convert png to jpeg, Should return 400", func(t *testing.T) {
 		recorder := httptest.NewRecorder()
 
 		body := bytes.NewBuffer([]byte{})

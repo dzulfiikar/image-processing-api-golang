@@ -6,17 +6,19 @@ import (
 	"os"
 )
 
-func ParseResponseToZip(byte []byte, fullPath string) *zip.ReadCloser {
-	_ = os.WriteFile(fullPath, byte, 0777)
+func ParseResponseToZip(byte []byte, targetDir string, targetPath string) *zip.ReadCloser {
+	os.Mkdir(targetDir, 0777)
 
-	zipR, err := zip.OpenReader(fullPath)
+	_ = os.WriteFile(targetPath, byte, 0777)
+
+	zipR, err := zip.OpenReader(targetPath)
 	if err != nil {
 		log.Println("Error when reading zip file")
 		log.Fatal(err)
 	}
 	defer func() {
 		zipR.Close()
-		os.Remove(fullPath)
+		os.Remove(targetPath)
 	}()
 
 	return zipR
