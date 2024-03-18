@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///Users/dzulfikar/.vscode/extensions/atlassian.atlascode-3.0.9/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+        "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "file:///Users/dzulfikar/Documents/Github/middle-backend-programmer-test/docker_compose.yaml"
+    }
+}

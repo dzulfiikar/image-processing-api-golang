@@ -1,0 +1,16 @@
+version: "3.0"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - APP_ENV=development
+      - APP_PORT=3000
+    ports:
+      - 3000:3000
+    networks:
+      - api
+
+networks:
+  api: {}
