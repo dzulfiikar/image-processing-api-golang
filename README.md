@@ -38,6 +38,15 @@
     * Run command 
       > go test -timeout 300s github.com/dzulfiikar/image-processing-api-golang/cmd/tests
 
+## Test Coverages
+    * Request form validation 
+      1. Image formats PNG / JPG (All Feat)
+      2. Image dimensions width and height (Resize Feat)
+      3. Image qualities for PNG or JPG format (Compress feat)
+    * Response validation
+      1. Return file for type ZIP
+      2. Check count of compressed files match the count of request    
+
 ## Docker Deployment
     * Run command
       > docker compose up -d 
