@@ -7,9 +7,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/dtos"
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/services"
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/validations"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/dtos"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/services"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/validations"
 	"github.com/gin-gonic/gin"
 )
 

@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/routes"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"gocv.io/x/gocv"

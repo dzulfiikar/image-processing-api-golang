@@ -1,4 +1,4 @@
-# Middle Backend Programmer Test - Dzulfikar
+# Image Processing API Golang
 
 ## Features 
     1. Png to Jpg Images Converter 
@@ -17,6 +17,7 @@
          - images []File
          - qualities []string{}
        * Response Form-Data : file Zip
+
 ## Installation 
     1. Install golang [Guide](https://go.dev/doc/install)
     2. Install OpenCV
@@ -25,7 +26,8 @@
        > go mod download && go mod verify
     3. Run the app 
        > go run ./cmd/main.go 
-
+    4. Then access the api via port 3000
+    
 ### Dependencies
     1. Gin - https://github.com/gin-gonic/gin
     2. Viper - https://github.com/spf13/viper
@@ -34,7 +36,13 @@
 ## Tests
     * Run test.sh script or
     * Run command 
-      > go test -timeout 300s github.com/dzulfiikar/middle-backend-programmer-test/cmd/tests
+      > go test -timeout 300s github.com/dzulfiikar/image-processing-api-golang/cmd/tests
+
+## Docker Deployment
+    * Run command
+      > docker compose up -d 
+    * Then access the api via port 3000
+    * Adjust config according to your preferences
 
 ## Postman Collection
-    Import file "Middle Backend Programmer Test.postman_collection.json" into your postman
+    Import file "Golang Image Processing API.postman_collection.json" into your postman

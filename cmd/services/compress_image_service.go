@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/dtos"
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/utils"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/dtos"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/utils"
 	"gocv.io/x/gocv"
 )
 

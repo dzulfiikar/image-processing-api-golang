@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/controllers"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/controllers"
 	"github.com/gin-gonic/gin"
 )
 

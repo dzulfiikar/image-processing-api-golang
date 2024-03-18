@@ -1,4 +1,4 @@
-module github.com/dzulfiikar/middle-backend-programmer-test
+module github.com/dzulfiikar/image-processing-api-golang
 
 go 1.21.0
 

@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/routes"
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/tests/utils"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/routes"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/tests/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

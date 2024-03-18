@@ -6,8 +6,8 @@ import (
 	"os"
 	"sync"
 
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/dtos"
-	"github.com/dzulfiikar/middle-backend-programmer-test/cmd/utils"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/dtos"
+	"github.com/dzulfiikar/image-processing-api-golang/cmd/utils"
 )
 
 func PngToJpegConverterService(dto dtos.PngToJpegInputDTO) (dtos.PngToJpegOutputDTO, error) {
